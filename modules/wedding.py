@@ -16,27 +16,34 @@ class Wedding(commands.Cog):
 		self.update_status_loop.start()
 
 	@commands.command()
+	@commands.has_permissions(administrator = True)
 	async def marry(self, ctx, member: discord.Member):
 		self.conf.set_value("married_member", str(member.id)) 
 		self.conf.save_json()
 
 		self.married_member = str(member.id)
 
-		await ctx.send("""{self.bot.user.mention} is now married to {member.mention}""")
+		await ctx.send(f"{self.bot.user.mention} is now married to {member.mention}")
 
 	@commands.command()
+	@commands.has_permissions(administrator = True)
 	async def divorce(self, ctx):
 		if self.married_member == "":
-			await ctx.send("""{self.bot.user.mention} is already alone""")
+			await ctx.send(f"{self.bot.user.mention} is already alone")
 			return
 
 		self.conf.set_value("married_member", "")
 		self.conf.save_json()
 		self.married_member = ""
 
-		await ctx.send("""{self.bot.user.mention} will walk alone now""")
+		await ctx.send(f"{self.bot.user.mention} will walk alone now")
 
-	@tasks.loop(minutes=1.0)
+	@commands.Cog.listener()
+	async def on_message(self, message : discord.Message):
+		if self.bot.user.mentioned_in(message) and (str(message.author.id) == self.married_member):
+			await message.add_reaction('\N{HEAVY BLACK HEART}')
+
+	@tasks.loop(minutes=10.0)
 	async def update_status_loop(self):
 		if self.married_member == "":
 			return
@@ -58,7 +65,7 @@ class Wedding(commands.Cog):
 		elif user.status == discord.Status.idle:
 			next_status = discord.Status.do_not_disturb
 
-		activity = discord.Activity(type=discord.ActivityType.watching, name="""{} \N{HEAVY BLACK HEART}""".format(user.name))
+		activity = discord.Activity(type=discord.ActivityType.watching, name=f"{user.name} \N{HEAVY BLACK HEART}")
 
 		if next_status != self.current_status and next_status != None:
 			self.current_status = next_status
