@@ -62,9 +62,6 @@ async def handle_input(message):
 				return
 
 async def on_mention(message):
-	if str(message.author.id) == config.get("marry"):
-		await message.add_reaction('\N{HEAVY BLACK HEART}')
-
 	if voice_module.is_actif():
 		await voice_module.handle_event(VoiceModuleEvent.Ping)
 
