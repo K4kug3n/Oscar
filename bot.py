@@ -74,15 +74,6 @@ async def on_mention(message):
 # 		await handle_input(message)
 # 	elif client.user.mentioned_in(message):
 # 		await on_mention(message)
-	
-@client.event
-async def on_member_remove(member):
-	print("Recognized that " + member.name + " left")
-
-	welcome_channel = client.get_channel(config.get('welcome_channel'))
-	bye_message = """{0.mention} *{0.name}* ({0.nick}) a quitté le serveur.""".format(member)
-
-	await welcome_channel.send(bye_message)
 
 class Looper(commands.Cog):
 	def __init__(self, bot, insta_config, kofi_config, gumroad_config, database):

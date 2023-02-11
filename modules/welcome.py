@@ -61,7 +61,16 @@ class Welcome(commands.Cog):
 
 				self.welcome_msg_unused.remove(reaction.message.id)
 			else:
-				await reaction.remove(user)  
+				await reaction.remove(user)
+
+	@commands.Cog.listener()
+	async def on_member_remove(self, member):
+		print("Recognized that " + member.name + " left")
+
+		welcome_channel = self.bot.get_channel(self.conf.get('welcome_channel'))
+		bye_message = """{0.mention} *{0.name}* ({0.nick}) a quitté le serveur.""".format(member)
+
+		await welcome_channel.send(bye_message)
 
 async def setup(bot):
 	await bot.add_cog(Welcome(bot))
