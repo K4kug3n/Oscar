@@ -12,8 +12,10 @@ Currently Work in Progress section, as Oscar try to improve himself
 ## Modules 
 
 ### Wedding
-Wedding is a fun module. Link Oscar to a Member of your server with (admistrator command)
-> !marry @yourMember
+Wedding is a fun module. Link Oscar to a Member of your server with (admistrator command) :
+> !marry @yourMember  
 Oscar's status & activity will be related to this member, and he will react if pinged by this member  
+You can unlink with :  
+> !divorce  
 
-Status and actibity is updated every 10 minutes.
+Status and activity is updated every 10 minutes.
