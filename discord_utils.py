@@ -73,8 +73,5 @@ def extract_role_id(argument : str) -> str:
     
     return ''
 
-async def set_status(client : discord.Client, new_status, new_activty):
-    await client.change_presence(status=new_status, activity=new_activty)
-
 def no_embed_link(link : str) -> str:
     return "<" + link + ">"
