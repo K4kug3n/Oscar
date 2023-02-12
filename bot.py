@@ -7,7 +7,6 @@ from config import *
 from database import *
 from utils import *
 
-import modules.instagram_module as Insta
 import modules.kofi_module as Kofi
 from modules.voice_module import VoiceModule, VoiceModuleEvent
 import modules.gumroad_module as Gumroad
@@ -18,12 +17,6 @@ config = Config()
 config.load_json('configs/config.json')
 
 database = Database(config.get('database_url'), 'Cluster0')
-
-insta_config = Config()
-insta_config.load_json('configs/insta_config.json')
-if not Insta.init(insta_config, database):
-	logger.fail_message("Can't init instagram module")
-	exit()
 
 kofi_config = Config()
 kofi_config.load_json('configs/kofi_config.json')
@@ -68,14 +61,12 @@ async def on_mention(message):
 # 		await on_mention(message)
 
 class Looper(commands.Cog):
-	def __init__(self, bot, insta_config, kofi_config, gumroad_config, database):
+	def __init__(self, bot, kofi_config, gumroad_config, database):
 		self.bot = bot
-		self.insta_config = insta_config
 		self.kofi_config = kofi_config
 		self.gumroad_config = gumroad_config
 		self.database = database
 
-		self.update_instagram_loop.start()
 		if kofi_config.get('active'):
 			self.update_kofi_loop.start()
 		if gumroad_config.get('active'):
@@ -86,20 +77,12 @@ class Looper(commands.Cog):
 		self.update_kofi_loop.cancel()
 
 	@tasks.loop(minutes=10.0)
-	async def update_instagram_loop(self):
-		await Insta.update(self.bot, self.insta_config, self.database)
-
-	@tasks.loop(minutes=10.0)
 	async def update_kofi_loop(self):
 		await Kofi.update(self.bot, self.kofi_config, self.database)
 
 	@tasks.loop(minutes=30.0)
 	async def update_gumroad_loop(self):
 		await Gumroad.update(self.bot, self.gumroad_config, self.database)
-
-	@update_instagram_loop.before_loop
-	async def isntagram_before_bot(self):
-		await self.bot.wait_until_ready()
 
 	@update_kofi_loop.before_loop
 	async def kofi_before_bot(self):
@@ -113,7 +96,7 @@ class Looper(commands.Cog):
 async def on_ready():
 	logger.success_message("""Logged in as {0.name} ({0.id})""".format(client.user))
 
-	Looper(client, insta_config, kofi_config, gumroad_config, database)
+	Looper(client, kofi_config, gumroad_config, database)
 
 async def main():
 	async with client:
@@ -121,6 +104,7 @@ async def main():
 		await client.load_extension("modules.interaction")
 		await client.load_extension("modules.welcome")
 		await client.load_extension("modules.wedding")
+		await client.load_extension("modules.instagram")
 		await client.start(config.get('token'))
 
 asyncio.run(main())
