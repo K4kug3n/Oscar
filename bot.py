@@ -11,7 +11,6 @@ import modules.instagram_module as Insta
 import modules.kofi_module as Kofi
 from modules.voice_module import VoiceModule, VoiceModuleEvent
 import modules.gumroad_module as Gumroad
-import modules.interaction_module as Interaction
 
 from discord.ext import tasks, commands
 
@@ -48,16 +47,12 @@ if not voice_module.is_valid():
 	logger.fail_message("Can't init voice module")
 	exit()
 
-interaction_module = Interaction.InteractionModule(client)
-
 async def handle_input(message):
 	args = parse(message.content)
 	command = args[0]
 
 	if has_role_by_id(config.get('modo_role_id'), message.author):
-		if await interaction_module.handle_command(command, args, message):
-			return
-		elif voice_module.is_actif():
+		if voice_module.is_actif():
 			if await voice_module.handle_command(command, args, message):
 				return
 
@@ -123,6 +118,7 @@ async def on_ready():
 async def main():
 	async with client:
 		await client.load_extension("modules.quote")
+		await client.load_extension("modules.interaction")
 		await client.load_extension("modules.welcome")
 		await client.load_extension("modules.wedding")
 		await client.start(config.get('token'))
