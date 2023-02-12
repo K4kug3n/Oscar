@@ -8,30 +8,6 @@ def load_csv(filename : str):
 		else:
 			return [value for value in content.split(';') if value != '']
 
-def parse(line : str) -> list:
-	default_args = line.split()
-	default_args[0] = default_args[0][1:] # Delete '!'
-
-	args = []
-
-	in_string = False
-	for i in range(len(default_args)):
-		if not in_string:
-			if default_args[i][0] == '"':
-				default_args[i] = default_args[i][1:]
-				if len(default_args[i]) > 1 and default_args[i][-1] == '"':
-					default_args[i] = default_args[i][:-1]
-				else:
-					in_string = True
-			args.append(default_args[i])
-		else:
-			if default_args[i][-1] == '"':
-				default_args[i] = default_args[i][:-1]
-				in_string = False 
-			args[-1] = args[-1] + " " + default_args[i]
-
-	return args
-
 def to_int(nb : str):
 	try:
 		converted_nb = int(nb)
