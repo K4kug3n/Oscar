@@ -100,11 +100,8 @@ async def on_ready():
 
 async def main():
 	async with client:
-		await client.load_extension("modules.quote")
-		await client.load_extension("modules.interaction")
-		await client.load_extension("modules.welcome")
-		await client.load_extension("modules.wedding")
-		await client.load_extension("modules.instagram")
+		for module in config.get("active_modules"):
+			await client.load_extension(f"""modules.{module}""")
 		await client.start(config.get('token'))
 
 asyncio.run(main())
