@@ -7,7 +7,6 @@ from discord.ext import commands, tasks
 import logger
 from custom_message import get_customised_message
 from discord_utils import no_embed_link
-
 from config import Config
 
 def outdated(lifetime : float):
@@ -19,7 +18,7 @@ def unchecked_code(code):
 def get_updated_token(token : str, config : Config):
 	r = requests.get(config.get("refresh_endpoint") + token)
 	if unchecked_code(r.status_code):
-		logger.fail_message(str(r.status_code) + " : " + r.text)
+		logger.fail_message(f"""[Insta] {str(r.status_code)} : {r.text}""")
 		return None, None
 
 	data = r.json()
@@ -27,8 +26,6 @@ def get_updated_token(token : str, config : Config):
 	return data["access_token"], data["expires_in"]
 
 def update_token(acc : dict, config : Config):
-	logger.warning_message(f"""[Insta] Token for {acc["name"]} need to be updated""")
-
 	new_token, lifetime = get_updated_token(acc["token"], config)
 	if not new_token:
 		logger.fail_message(f"""[Insta] Can't update token for {acc["name"]}""")
@@ -38,11 +35,11 @@ def update_token(acc : dict, config : Config):
 	acc["token_expires_date"] = time.time() + lifetime
 	acc["token_next_update_date"] = time.time() + lifetime * 0.8
 
-	logger.success_message("[Insta] Update success")
 	return True
 
 def token_status(acc : dict):
-	return outdated(acc["token_next_update_date"]), outdated(acc["token_expires_date"])
+	# Check if update needed, and if token_expires_date is expired (but differente than token_next_update_date, for default config)
+	return outdated(acc["token_next_update_date"]), outdated(acc["token_expires_date"]) and (acc["token_expires_date"] != acc["token_next_update_date"])
 
 def get_new_publications(publications : list[dict], posted : list[int]):
 	new_publications = []
@@ -86,7 +83,7 @@ class Instagram(commands.Cog):
 		self.bot = bot
 
 		self.conf = Config()
-		self.conf.load_json("configs/insta_config.json")
+		self.conf.load_json("configs/instagram.json")
 
 		self.validate_config()
 
@@ -139,7 +136,7 @@ class Instagram(commands.Cog):
 				
 			r = requests.get(self.conf.get("media_endpoint") + acc["token"])
 			if unchecked_code(r.status_code):
-				logger.fail_message(f"""Can't get data for the token : {acc["token"]} ({acc["name"]}):\n {str(r.status_code)} : {r.text}""")
+				logger.fail_message(f"""[Insta] Can't get data for the token : {acc["token"]} ({acc["name"]}):\n {str(r.status_code)} : {r.text}""")
 				continue
 				
 			data = r.json()['data']
@@ -155,24 +152,22 @@ class Instagram(commands.Cog):
 			channel_id = acc["channel_id"]
 			channel = self.bot.get_channel(channel_id)
 			if channel == None:
-				logger.fail_message(str(channel_id) + " is not a valid channel id")
+				logger.fail_message(f"""[Insta] {str(channel_id)} is not a valid channel id""")
 				continue
 				
 			for publication in reversed(new_publications):
-				logger.warning_message("Publishing : " + publication["id"])
-
 				introduction_message = prepare_introduction_message(publication, acc, self.bot)
 				embded_message = prepare_embded_pub(publication, acc)
 				try:
 					await channel.send(introduction_message)
 					await channel.send(embed=embded_message)
 				except:
-					logger.fail_message("Can't send message in channel " + str(channel_id))
+					logger.fail_message(f"""[Insta] Can't send message in channel {str(channel_id)}""")
 
 				acc["published_ids"].append(publication["id"])
 
 			if not self.conf.save_json():
-				logger.fail_message("Can't update database for " + acc['name'])
+				logger.fail_message(f"""[Insta] Can't update config file for {acc['name']}""")
 
 	@publication_update.before_loop
 	async def publication_update_before_bot(self):
