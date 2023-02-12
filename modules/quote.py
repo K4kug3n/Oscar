@@ -17,7 +17,7 @@ class Quote(commands.Cog):
 	@quote.command()
 	async def say(self, ctx : commands.Context):
 		try:
-			quotes = load_csv("quotes.csv")
+			quotes = load_csv("modules/quotes.csv")
 			if len(quotes) > 0:
 				await ctx.send(random.choice(quotes))
 			else:
