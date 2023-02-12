@@ -9,6 +9,16 @@ Combining useless little things, and some automation, it became a real project t
 ### How
 Currently Work in Progress section, as Oscar try to improve himself
 
+The minimal setup is to add `configs/config.json` file in the Oscar folder, with it inside : 
+```
+{
+	"token": "XX",
+	"active_modules": []
+}
+```
+
+You need to replace XX with your bot token. Modules are desactivated by default, add there names (in lowercase) in `active_modules` to activate them on Oscar reboot.
+
 ## Modules 
 
 ### Interaction 
