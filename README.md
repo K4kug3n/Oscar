@@ -44,6 +44,38 @@ Quote is a fun module. Make Oscar look intelligente by quoting things. Add you q
 Oscar will pick one to say with (administrator command) : 
 > !quote say  
 
+### Voice
+Voice is a fun module. Make Oscar join & quit in voice channels (administrator commands) :
+> !voice join <#aVoiceChannelId>  
+> !voice quit  
+
+While connected, Oscar can play audio file placed in `sounds/` with (administrator commands) :
+> !voice play "file.mp3"  
+
+Also, Oscar can play automated sound on certain event with `configs/voice.json` file : 
+```
+{
+	"on_join":{
+		"active": true,
+		"type": "RANDOM",
+		"names": [ "Hello1.mp3", "Hello2.mp3" ]
+	},
+	"on_quit":{
+		"active": true,
+		"type": "SINGLE",
+		"name": "Bye.mp3"
+	},
+	"on_ping":{
+		"active": true,
+		"type": "SINGLE",
+		"name": "Ping.mp3"
+	}
+}
+```
+With `"type": "SINGLE"`, the sound specified will be played. The `"type": "RANDOM"` will pick one of the random specified sounds.  
+
+*Warning* FFMPEG should be installed and `ffmpeg` should be in the PATH for the Voice module working.
+
 ### Instagram
 Instagram is a automation module. Oscar will post a message if a new publication is posted on configurated accounts.
 Currently, the setup only depends on configuration file `configs/instagram.json` :  
