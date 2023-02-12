@@ -25,6 +25,9 @@ class Config:
     def get(self, key : str):
         return self.data[key]
 
+    def has(self, key : str):
+        return key in self.data
+
     def set_value(self, key : str, value):
         self.data[key] = value
 
