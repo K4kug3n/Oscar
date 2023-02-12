@@ -29,6 +29,11 @@ You can unlink with :
 Status and activity is updated every 10 minutes.  
 Need a configuration file `configs/wedding.json` with `married_member: ""` field to start working.
 
+### Quote
+Quote is a fun module. Make Oscar look intelligente by quoting things. Add you quote in `configs/quotes.csv` with `,` splitter.  
+Oscar will pick one to say with (administrator command) : 
+> !quote say  
+
 ### Instagram
 Instagram is a automation module. Oscar will post a message if a new publication is posted on configurated accounts.
 Currently, the setup only depends on configuration file `configs/instagram.json` :  

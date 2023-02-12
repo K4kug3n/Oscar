@@ -10,14 +10,16 @@ class Quote(commands.Cog):
 		self.bot = bot
 
 	@commands.group()
+	@commands.has_permissions(administrator = True)
 	async def quote(self, ctx : commands.Context):
 		if ctx.invoked_subcommand is None:
 			await ctx.send('Invalid quote command')
 
 	@quote.command()
+	@commands.has_permissions(administrator = True)
 	async def say(self, ctx : commands.Context):
 		try:
-			quotes = load_csv("modules/quotes.csv")
+			quotes = load_csv("configs/quotes.csv")
 			if len(quotes) > 0:
 				await ctx.send(random.choice(quotes))
 			else:
