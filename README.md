@@ -110,3 +110,24 @@ You need to replace XX with revelant infos to add your first instagram account t
 `message` field will be detailed later (still WIP), you can currently ping a role when posting.  
 
 *Warning* Be ready for a spam on first use, Oscar will post about every post found before registering them (you can add there id's as string in `published_ids` to prevent it).
+
+### Gumroad  
+Gumroad is a automation module. Oscar will post a message if a new product is published on configurated accounts.
+Currently, the setup only depends on configuration file `configs/gumroad.json` :  
+```
+{
+    "endpoint": "https://api.gumroad.com/v2/products?access_token=",
+    "accounts": [
+        {
+            "product_channel_id": XXXXXXXXXXXXXXXXXX,
+            "token": "XXX",
+            "published_ids": []
+        }
+    ]
+}
+```
+You need to replace XX with revelant infos to add your first instagram account to Oscar (refer to Gumroad documentation for `token` field). Add other accounts in `accounts` field with the same partern.  
+
+`message` field will be added later (still WIP).
+
+*Warning* Be ready for a spam on first use, Oscar will post about every product found before registering them (you can add there id's as string in `published_ids` to prevent it).
