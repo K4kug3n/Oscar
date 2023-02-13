@@ -74,10 +74,46 @@ Also, Oscar can play automated sound on certain event with `configs/voice.json` 
 ```
 With `"type": "SINGLE"`, the sound specified will be played. The `"type": "RANDOM"` will pick one of the random specified sounds.  
 
-*Warning* FFMPEG should be installed and `ffmpeg` should be in the PATH for the Voice module working.
+*Warning* FFMPEG should be installed and `ffmpeg` should be in the PATH to make Voice module work.
+
+### Welcome
+
+Welcome is an automation module. Oscar will post a message if a new member join.
+Currently, the setup only depends on configuration file `configs/welcome.json` : 
+```
+{
+	"welcome_channel": XXXXXXXXXXXXX,
+    "default_role_ids": [],
+
+	"buttons_roles": [
+		{
+			"emoji":  "0️⃣",
+			"roles": []
+		},
+		{
+			"emoji": "1️⃣",
+			"roles": []
+		}
+	],
+
+	"welcome_message":{
+		"content": "Welcome",
+		"content_args": []
+	}
+}
+```
+`welcome_channel` need to be filled with your welcome channel (where the message will be posted).    
+`default_role_ids` contains id of default role given when joining the server.  
+`buttons_roles` contains the different infos about boutons added to the welcome message, it can give role when clicked.  
+`welcome_message` field will be detailed later (still WIP)  
+
+It's possible to try the setup with (administrator command) : 
+>!welcome @aMember  
+
+Which will post the welcome message for this member in the current channel.
 
 ### Instagram
-Instagram is a automation module. Oscar will post a message if a new publication is posted on configurated accounts.
+Instagram is an automation module. Oscar will post a message if a new publication is posted on configurated accounts.
 Currently, the setup only depends on configuration file `configs/instagram.json` :  
 ```
 {
@@ -112,7 +148,7 @@ You need to replace XX with revelant infos to add your first instagram account t
 *Warning* Be ready for a spam on first use, Oscar will post about every post found before registering them (you can add there id's as string in `published_ids` to prevent it).
 
 ### Gumroad  
-Gumroad is a automation module. Oscar will post a message if a new product is published on configurated accounts.
+Gumroad is an automation module. Oscar will post a message if a new product is published on configurated accounts.
 Currently, the setup only depends on configuration file `configs/gumroad.json` :  
 ```
 {
