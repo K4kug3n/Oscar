@@ -4,7 +4,7 @@
 
 ### What & Why
 Oscar is a multi-purpose bot developed on-fly for private server.  
-Combining useless little things, and some automation, it became a real project that may be cool to have.
+Combining useless little things, and some automation, it became a real project that is absolutely necessary (not sure).
 
 ### How
 Currently Work in Progress section, as Oscar try to improve himself
@@ -17,19 +17,24 @@ The minimal setup is to add `configs/config.json` file in the Oscar folder, with
 }
 ```
 
-You need to replace XX with your bot token. Modules are desactivated by default, add there names (in lowercase) in `active_modules` to activate them on Oscar reboot.
+You need to replace XX with your bot token. Modules are desactivated by default, add there names (in lowercase) in `active_modules` to activate them on Oscar reboot.  
+
+You can also use command to configure actives modules (administrator commands) :
+> !module list  
+> !module load name  
+> !module unload name  
 
 ## Modules 
 
 ### Interaction 
-Interaction is a fun module. Make Oscar say something (admistrator command) :
+Interaction is a fun module. Make Oscar say something (administrator command) :
 > !say #aChannel "a message"  
 
 Oscar can also react to a message (admistrator command) :
 > !react #aChannel 00000 :heart:
 
 ### Wedding
-Wedding is a fun module. Link Oscar to a Member of your server with (admistrator command) :
+Wedding is a fun module. Link Oscar to a Member of your server with (administrator command) :
 > !marry @yourMember  
 
 Oscar's status & activity will be related to this member, and he will react if pinged by this member  
