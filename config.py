@@ -4,7 +4,7 @@ import logger
 
 class Config:
     def __init__(self):
-        self.data = []
+        self.data = {}
         self.name = ""
 
     def load_json(self, filename : str):
