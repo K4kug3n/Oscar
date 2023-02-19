@@ -130,7 +130,7 @@ class Instagram(commands.Cog):
 				continue
 
 			if need_update:
-				if not update_token(acc):
+				if not update_token(acc, self.conf):
 					continue
 				self.conf.save_json()
 				
