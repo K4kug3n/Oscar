@@ -67,16 +67,16 @@ def prepare_embded_pub(requested_data : dict, user_data : dict):
 
     return embded_pub
 
-def prepare_introduction_message(requested_data : dict, user_data : dict, bot : commands.Bot):
+def prepare_introduction_message(user_data : dict, bot : commands.Bot):
     if 'message' in user_data.keys():
 
         message_object = user_data['message']
         if not 'arguments' in message_object.keys() or message_object['arguments'] == []:
-            return message_object['content'] + requested_data['permalink']
+            return message_object['content']
 
-        return get_customised_message(message_object['content'], message_object['arguments'], bot) + no_embed_link(requested_data['permalink'])
+        return get_customised_message(message_object['content'], message_object['arguments'], bot)
     else:
-        return requested_data['permalink'] # Add link to the publication
+        return ""
 
 class Instagram(commands.Cog):
 	def __init__(self, bot : commands.Bot):
@@ -154,16 +154,23 @@ class Instagram(commands.Cog):
 			if channel == None:
 				logger.fail_message(f"""[Insta] {str(channel_id)} is not a valid channel id""")
 				continue
-				
+			
+			introduction_message = prepare_introduction_message(acc, self.bot)
+			try:
+				await channel.send(introduction_message)
+			except:
+				logger.fail_message(f"""[Insta] Can't send message in channel {str(channel_id)}""")
+			
+			
 			for publication in reversed(new_publications):
-				introduction_message = prepare_introduction_message(publication, acc, self.bot)
 				embded_message = prepare_embded_pub(publication, acc)
 				try:
-					await channel.send(introduction_message)
+					await channel.send(no_embed_link(publication['permalink']))
 					await channel.send(embed=embded_message)
 				except:
 					logger.fail_message(f"""[Insta] Can't send message in channel {str(channel_id)}""")
 
+				logger.success_message(f"""[Insta] Published {publication["id"]} for {acc['name']}""")
 				acc["published_ids"].append(publication["id"])
 
 			if not self.conf.save_json():
